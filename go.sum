@@ -11,6 +11,8 @@ github.com/ananagame/rich-go v0.0.0-20210525072106-9d45f0e06959 h1:JKgYojLXqnVzg
 github.com/ananagame/rich-go v0.0.0-20210525072106-9d45f0e06959/go.mod h1:U9YxCfeNzWcDUs4O8lQfUyz9txKHTojVykpQicaZhyU=
 github.com/blobnom/go-rosuapi v0.0.0-20230128194607-c9e4b2b7bc03 h1:gWCbj5mMGmxBQvq8lKnQd4Yjr0S5FlWLBH9XeUp8LeA=
 github.com/blobnom/go-rosuapi v0.0.0-20230128194607-c9e4b2b7bc03/go.mod h1:1mA/uOpVrbPvHAvTFz6Gd2YrFdPDNietyzA9bhCeezU=
+github.com/blobnom/go-rosuapi v0.0.0-20230128194943-6b21ec69fd28 h1:wTTow4IxZZ0JAgFDXinEBw/zyu0kkisd8yPHuVKW5fU=
+github.com/blobnom/go-rosuapi v0.0.0-20230128194943-6b21ec69fd28/go.mod h1:1mA/uOpVrbPvHAvTFz6Gd2YrFdPDNietyzA9bhCeezU=
 github.com/bnch/uleb128 v0.0.0-20160221084957-fac1fe18ad59 h1:WmIm5PO5EyIEWq8ia2isZi+M8n4jb+jK8n62RUAQskA=
 github.com/bnch/uleb128 v0.0.0-20160221084957-fac1fe18ad59/go.mod h1:zsF7tgeh6SxSU4t28n0DKFAmrHwIrdgbsBC50nUWIi8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -66,8 +68,6 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
-github.com/thehowl/go-osuapi v0.0.0-20181219091033-b29455689881 h1:FAuvIwAbe8iDo0RGdCcF6eb20snyOumyaHU9BdxlCac=
-github.com/thehowl/go-osuapi v0.0.0-20181219091033-b29455689881/go.mod h1:Y+d6hzF4BM2sz5ytQmJLSImHq9dP9JS3dM4xwarFoUQ=
 github.com/tklauser/go-sysconf v0.3.8 h1:41Nq9J+pxKud4IQ830J5LlS5nl67dVQC7AuisUooaOU=
 github.com/tklauser/go-sysconf v0.3.8/go.mod h1:z4zYWRS+X53WUKtBcmDg1comV3fPhdQnzasnIHUoLDU=
 github.com/tklauser/numcpus v0.2.3/go.mod h1:vpEPS/JC+oZGGQ/My/vJnNsvMDQL6PwOqt8dsCw5j+E=
