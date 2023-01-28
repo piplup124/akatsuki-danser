@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/thehowl/go-osuapi"
+	osuapi "github.com/blobnom/go-rosuapi"
 	"github.com/wieku/danser-go/app/settings"
 	"github.com/wieku/danser-go/app/skin"
 	"github.com/wieku/danser-go/app/utils"
@@ -194,7 +194,7 @@ func (entry *ScoreboardEntry) LoadAvatarID(id int) {
 	response, err := client.Do(request)
 
 	if err != nil {
-		log.Println(fmt.Sprintf("Failed to create request to: \"%s\": %s", url, err))
+		log.Printf("Failed to create request to: \"%s\": %s", url, err)
 		return
 	}
 
@@ -236,7 +236,7 @@ func (entry *ScoreboardEntry) LoadDefaultAvatar() {
 func (entry *ScoreboardEntry) LoadAvatarUser(user string) {
 	key := strings.TrimSpace(settings.Credentails.ApiV1Key)
 	if key == "" {
-		log.Println(fmt.Sprintf("Please put your osu!api v1 key into '%s' file", filepath.Join(env.ConfigDir(), "credentials.json")))
+		log.Printf("Please put your osu!api v1 key into '%s' file", filepath.Join(env.ConfigDir(), "credentials.json"))
 	} else {
 		client := osuapi.NewClient(key)
 		err := client.Test()

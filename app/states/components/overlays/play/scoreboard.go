@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/thehowl/go-osuapi"
+	osuapi "github.com/blobnom/go-rosuapi"
 	"github.com/wieku/danser-go/app/beatmap"
 	"github.com/wieku/danser-go/app/beatmap/difficulty"
 	"github.com/wieku/danser-go/app/settings"

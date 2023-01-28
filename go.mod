@@ -26,7 +26,6 @@ require (
 	github.com/oliamb/cutter v0.2.2 // indirect
 	github.com/shirou/gopsutil v3.21.7+incompatible
 	github.com/stretchr/testify v1.7.0 // indirect
-	github.com/thehowl/go-osuapi v0.0.0-20181219091033-b29455689881
 	github.com/tklauser/go-sysconf v0.3.8 // indirect
 	github.com/tklauser/numcpus v0.3.0 // indirect
 	github.com/wieku/rplpa v0.0.0-20210919131836-bff7a920f6e1
@@ -43,6 +42,7 @@ require (
 
 require (
 	github.com/TheTitanrain/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
+	github.com/blobnom/go-rosuapi v0.0.0-20230128194607-c9e4b2b7bc03 // indirect
 	github.com/rodrigocfd/windigo v0.0.0-20221212040622-0d5f23c1b18a // indirect
 )
 

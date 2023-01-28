@@ -9,6 +9,8 @@ github.com/TheTitanrain/w32 v0.0.0-20180517000239-4f5cfb03fabf/go.mod h1:peYoMnc
 github.com/ananagame/rich-go v0.0.0-20200319172754-527649f3d36d/go.mod h1:U9YxCfeNzWcDUs4O8lQfUyz9txKHTojVykpQicaZhyU=
 github.com/ananagame/rich-go v0.0.0-20210525072106-9d45f0e06959 h1:JKgYojLXqnVzgJ3SwLsxMm7GvKtZa/KryMO/mTAukEM=
 github.com/ananagame/rich-go v0.0.0-20210525072106-9d45f0e06959/go.mod h1:U9YxCfeNzWcDUs4O8lQfUyz9txKHTojVykpQicaZhyU=
+github.com/blobnom/go-rosuapi v0.0.0-20230128194607-c9e4b2b7bc03 h1:gWCbj5mMGmxBQvq8lKnQd4Yjr0S5FlWLBH9XeUp8LeA=
+github.com/blobnom/go-rosuapi v0.0.0-20230128194607-c9e4b2b7bc03/go.mod h1:1mA/uOpVrbPvHAvTFz6Gd2YrFdPDNietyzA9bhCeezU=
 github.com/bnch/uleb128 v0.0.0-20160221084957-fac1fe18ad59 h1:WmIm5PO5EyIEWq8ia2isZi+M8n4jb+jK8n62RUAQskA=
 github.com/bnch/uleb128 v0.0.0-20160221084957-fac1fe18ad59/go.mod h1:zsF7tgeh6SxSU4t28n0DKFAmrHwIrdgbsBC50nUWIi8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
