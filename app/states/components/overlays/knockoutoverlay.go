@@ -2,12 +2,18 @@ package overlays
 
 import (
 	"fmt"
+	"log"
+	"math"
+	"math/rand"
+	"sort"
+	"strconv"
+	"strings"
+
 	"github.com/wieku/danser-go/app/beatmap/difficulty"
 	"github.com/wieku/danser-go/app/dance"
 	"github.com/wieku/danser-go/app/discord"
 	"github.com/wieku/danser-go/app/graphics"
 	"github.com/wieku/danser-go/app/rulesets/osu"
-	"github.com/wieku/danser-go/app/rulesets/osu/performance/pp220930"
 	"github.com/wieku/danser-go/app/settings"
 	"github.com/wieku/danser-go/app/skin"
 	"github.com/wieku/danser-go/app/states/components/common"
@@ -22,12 +28,6 @@ import (
 	color2 "github.com/wieku/danser-go/framework/math/color"
 	"github.com/wieku/danser-go/framework/math/mutils"
 	"github.com/wieku/danser-go/framework/math/vector"
-	"log"
-	"math"
-	"math/rand"
-	"sort"
-	"strconv"
-	"strings"
 )
 
 type stats struct {
@@ -261,7 +261,7 @@ func NewKnockoutOverlay(replayController *dance.ReplayController) *KnockoutOverl
 	return overlay
 }
 
-func (overlay *KnockoutOverlay) hitReceived(cursor *graphics.Cursor, time int64, number int64, position vector.Vector2d, result osu.HitResult, comboResult osu.ComboResult, ppResults pp220930.PPv2Results, score int64) {
+func (overlay *KnockoutOverlay) hitReceived(cursor *graphics.Cursor, time int64, number int64, position vector.Vector2d, result osu.HitResult, comboResult osu.ComboResult, ppResults osu.PerformanceResult, score int64) {
 	if result == osu.PositionalMiss {
 		return
 	}
@@ -273,7 +273,7 @@ func (overlay *KnockoutOverlay) hitReceived(cursor *graphics.Cursor, time int64,
 	}
 
 	player.score = score
-	player.pp = ppResults.Total
+	player.pp = ppResults.PP
 
 	player.scoreDisp.SetValue(float64(score), false)
 	player.ppDisp.SetValue(player.pp, false)
@@ -281,7 +281,7 @@ func (overlay *KnockoutOverlay) hitReceived(cursor *graphics.Cursor, time int64,
 	sc := overlay.controller.GetRuleset().GetScore(cursor)
 
 	player.perObjectStats[number].score = score
-	player.perObjectStats[number].pp = ppResults.Total
+	player.perObjectStats[number].pp = ppResults.PP
 	player.perObjectStats[number].accuracy = sc.Accuracy
 
 	player.accDisp.SetValue(sc.Accuracy, false)

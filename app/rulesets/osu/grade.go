@@ -5,7 +5,7 @@ type Grade uint8
 const (
 	NONE = Grade(iota)
 	D
-	C
+	_C
 	B
 	A
 	S
@@ -18,7 +18,7 @@ func (grade Grade) String() string {
 	switch grade {
 	case D:
 		return "D"
-	case C:
+	case _C:
 		return "C"
 	case B:
 		return "B"
@@ -43,7 +43,7 @@ func (grade Grade) TextureName() string {
 	switch grade {
 	case D:
 		return "d"
-	case C:
+	case _C:
 		return "c"
 	case B:
 		return "b"

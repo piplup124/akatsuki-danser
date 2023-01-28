@@ -2,6 +2,13 @@ package overlays
 
 import (
 	"fmt"
+	"log"
+	"math"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/wieku/danser-go/app/audio"
 	"github.com/wieku/danser-go/app/beatmap"
@@ -12,7 +19,6 @@ import (
 	"github.com/wieku/danser-go/app/graphics"
 	"github.com/wieku/danser-go/app/input"
 	"github.com/wieku/danser-go/app/rulesets/osu"
-	"github.com/wieku/danser-go/app/rulesets/osu/performance/pp220930"
 	"github.com/wieku/danser-go/app/settings"
 	"github.com/wieku/danser-go/app/skin"
 	"github.com/wieku/danser-go/app/states/components/common"
@@ -31,12 +37,6 @@ import (
 	color2 "github.com/wieku/danser-go/framework/math/color"
 	"github.com/wieku/danser-go/framework/math/mutils"
 	"github.com/wieku/danser-go/framework/math/vector"
-	"log"
-	"math"
-	"os"
-	"path/filepath"
-	"strconv"
-	"strings"
 )
 
 const (
@@ -324,7 +324,7 @@ func (overlay *ScoreOverlay) initUnderlay() {
 	overlay.underlay.SetScale(uScale)
 }
 
-func (overlay *ScoreOverlay) hitReceived(c *graphics.Cursor, time int64, number int64, position vector.Vector2d, result osu.HitResult, comboResult osu.ComboResult, ppResults pp220930.PPv2Results, _ int64) {
+func (overlay *ScoreOverlay) hitReceived(c *graphics.Cursor, time int64, number int64, position vector.Vector2d, result osu.HitResult, comboResult osu.ComboResult, ppResults osu.PerformanceResult, _ int64) {
 	object := overlay.ruleset.GetBeatMap().HitObjects[number]
 
 	if result&(osu.BaseHitsM) > 0 {
@@ -368,7 +368,11 @@ func (overlay *ScoreOverlay) hitReceived(c *graphics.Cursor, time int64, number 
 
 	sc := overlay.ruleset.GetScore(overlay.cursor)
 
-	overlay.entry.UpdatePlayer(sc.Score, int64(sc.Combo))
+	if sc.Mods.Active(difficulty.Relax) || sc.Mods.Active(difficulty.Relax2) {
+		overlay.entry.UpdatePlayer(int64(sc.PP), int64(sc.Combo))
+	} else {
+		overlay.entry.UpdatePlayer(sc.Score, int64(sc.Combo))
+	}
 
 	overlay.scoreGlider.SetValue(float64(sc.Score), settings.Gameplay.Score.StaticScore)
 	overlay.accuracyGlider.SetValue(sc.Accuracy, settings.Gameplay.Score.StaticAccuracy)

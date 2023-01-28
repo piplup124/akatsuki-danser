@@ -2,6 +2,12 @@ package play
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+	"path/filepath"
+	"strconv"
+	"strings"
+
 	"github.com/thehowl/go-osuapi"
 	"github.com/wieku/danser-go/app/settings"
 	"github.com/wieku/danser-go/app/skin"
@@ -14,11 +20,6 @@ import (
 	"github.com/wieku/danser-go/framework/graphics/texture"
 	color2 "github.com/wieku/danser-go/framework/math/color"
 	"github.com/wieku/danser-go/framework/math/vector"
-	"log"
-	"net/http"
-	"path/filepath"
-	"strconv"
-	"strings"
 )
 
 type ScoreboardEntry struct {
@@ -178,7 +179,7 @@ func (entry *ScoreboardEntry) loadAvatar(pixmap *texture.Pixmap) {
 }
 
 func (entry *ScoreboardEntry) LoadAvatarID(id int) {
-	url := "https://a.ppy.sh/" + strconv.Itoa(id)
+	url := "https://a.ussr.pl/" + strconv.Itoa(id)
 
 	log.Println("Trying to fetch avatar from:", url)
 

@@ -2,6 +2,11 @@ package play
 
 import (
 	"fmt"
+	"log"
+	"path/filepath"
+	"strconv"
+	"strings"
+
 	"github.com/faiface/mainthread"
 	"github.com/wieku/danser-go/app/graphics"
 	"github.com/wieku/danser-go/app/rulesets/osu"
@@ -17,10 +22,6 @@ import (
 	"github.com/wieku/danser-go/framework/math/math32"
 	"github.com/wieku/danser-go/framework/math/scaling"
 	"github.com/wieku/danser-go/framework/math/vector"
-	"log"
-	"path/filepath"
-	"strconv"
-	"strings"
 )
 
 const (
@@ -136,7 +137,7 @@ func NewRankingPanel(cursor *graphics.Cursor, ruleset *osu.OsuRuleSet, hitError 
 
 	score := panel.ruleset.GetScore(panel.cursor)
 
-	panel.pp = fmt.Sprintf("%."+strconv.Itoa(settings.Gameplay.PPCounter.Decimals)+"fpp", score.PP.Total)
+	panel.pp = fmt.Sprintf("%."+strconv.Itoa(settings.Gameplay.PPCounter.Decimals)+"fpp", score.PP)
 
 	panel.gradeS = sprite.NewSpriteSingle(skin.GetTexture("ranking-"+score.Grade.TextureName()), 5, rRPos, vector.Centre)
 

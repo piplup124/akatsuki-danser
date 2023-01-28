@@ -2,15 +2,16 @@ package play
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/wieku/danser-go/app/beatmap/difficulty"
-	"github.com/wieku/danser-go/app/rulesets/osu/performance/pp220930"
+	"github.com/wieku/danser-go/app/rulesets/osu"
 	"github.com/wieku/danser-go/app/settings"
 	"github.com/wieku/danser-go/framework/graphics/batch"
 	"github.com/wieku/danser-go/framework/graphics/font"
 	"github.com/wieku/danser-go/framework/math/animation"
 	color2 "github.com/wieku/danser-go/framework/math/color"
 	"github.com/wieku/danser-go/framework/math/vector"
-	"strconv"
 )
 
 type PPDisplay struct {
@@ -60,14 +61,14 @@ func NewPPDisplay(mods difficulty.Modifier, experimentalPP bool) *PPDisplay {
 	}
 }
 
-func (ppDisplay *PPDisplay) Add(results pp220930.PPv2Results) {
+func (ppDisplay *PPDisplay) Add(results osu.PerformanceResult) {
 	static := settings.Gameplay.PPCounter.Static
 
-	ppDisplay.aimGlider.SetValue(results.Aim, static)
-	ppDisplay.tapGlider.SetValue(results.Speed, static)
-	ppDisplay.accGlider.SetValue(results.Acc, static)
-	ppDisplay.flashlightGlider.SetValue(results.Flashlight, static)
-	ppDisplay.ppGlider.SetValue(results.Total, static)
+	ppDisplay.aimGlider.SetValue(results.PP, static)
+	ppDisplay.tapGlider.SetValue(results.PP, static)
+	ppDisplay.accGlider.SetValue(results.PP, static)
+	ppDisplay.flashlightGlider.SetValue(results.PP, static)
+	ppDisplay.ppGlider.SetValue(results.PP, static)
 }
 
 func (ppDisplay *PPDisplay) Update(time float64) {

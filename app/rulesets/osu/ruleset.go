@@ -1,7 +1,21 @@
 package osu
 
+/*
+#cgo LDFLAGS: -L ./performance/lib -l akatsuki_pp_ffi
+#include "./performance/lib/akatsuki_pp_ffi.h"
+#include <stdlib.h>
+*/
+import "C"
+
 import (
 	"fmt"
+	"log"
+	"math"
+	"path/filepath"
+	"sort"
+	"strings"
+	"unsafe"
+
 	"github.com/olekukonko/tablewriter"
 	"github.com/wieku/danser-go/app/beatmap"
 	"github.com/wieku/danser-go/app/beatmap/difficulty"
@@ -12,10 +26,6 @@ import (
 	"github.com/wieku/danser-go/app/utils"
 	"github.com/wieku/danser-go/framework/math/mutils"
 	"github.com/wieku/danser-go/framework/math/vector"
-	"log"
-	"math"
-	"sort"
-	"strings"
 )
 
 const Tolerance2B = 3
@@ -92,7 +102,49 @@ type Score struct {
 	Count50      uint
 	CountMiss    uint
 	CountSB      uint
-	PP           pp220930.PPv2Results
+	PP           float64
+	Mods         difficulty.Modifier
+}
+
+type rosuPP struct {
+	MapPath     string
+	Performance PerformanceResult
+}
+
+type ScoreParams struct {
+	Mode          uint
+	Mods          uint
+	MaxCombo      uint
+	Accuracy      float64
+	MissCount     uint
+	PassedObjects uint
+}
+
+type PerformanceResult struct {
+	PP    float64
+	Stars float64
+}
+
+func (calc rosuPP) Calculate(params ScoreParams) PerformanceResult {
+	cMapPath := C.CString(calc.MapPath)
+	defer C.free(unsafe.Pointer(cMapPath))
+
+	passedObjects := C.optionu32{t: C.uint(0), is_some: C.uchar(0)}
+	if params.PassedObjects > 0 {
+		passedObjects = C.optionu32{t: C.uint(params.PassedObjects), is_some: C.uchar(1)}
+	}
+
+	rawResult := C.calculate_score(
+		cMapPath,
+		C.uint(params.Mode),
+		C.uint(params.Mods),
+		C.uint(params.MaxCombo),
+		C.double(params.Accuracy),
+		C.uint(params.MissCount),
+		passedObjects,
+	)
+
+	return PerformanceResult{PP: float64(rawResult.pp), Stars: float64(rawResult.stars)}
 }
 
 type subSet struct {
@@ -107,7 +159,8 @@ type subSet struct {
 
 	numObjects uint
 
-	ppv2 *pp220930.PPv2
+	performance *rosuPP
+	ppv2        *pp220930.PPv2
 
 	recoveries int
 	failed     bool
@@ -115,7 +168,7 @@ type subSet struct {
 	forceFail  bool
 }
 
-type hitListener func(cursor *graphics.Cursor, time int64, number int64, position vector.Vector2d, result HitResult, comboResult ComboResult, ppResults pp220930.PPv2Results, score int64)
+type hitListener func(cursor *graphics.Cursor, time int64, number int64, position vector.Vector2d, result HitResult, comboResult ComboResult, ppResults PerformanceResult, score int64)
 
 type endListener func(time int64, number int64)
 
@@ -197,7 +250,7 @@ func NewOsuRuleset(beatMap *beatmap.BeatMap, cursors []*graphics.Cursor, mods []
 			log.Println("\tTotal:", pp.Results.Total)
 		}
 
-		log.Println(fmt.Sprintf("Calculating HP rates for \"%s\"...", cursor.Name))
+		log.Printf("Calculating HP rates for \"%s\"...", cursor.Name)
 
 		hp := NewHealthProcessor(beatMap, diff, !cursor.OldSpinnerScoring)
 		hp.CalculateRate()
@@ -230,6 +283,10 @@ func NewOsuRuleset(beatMap *beatmap.BeatMap, cursors []*graphics.Cursor, mods []
 			player: player,
 			score: &Score{
 				Accuracy: 100,
+				Mods:     mods[i],
+			},
+			performance: &rosuPP{
+				MapPath: filepath.Join(settings.General.GetSongsDir(), beatMap.Dir, beatMap.File),
 			},
 			ppv2:           &pp220930.PPv2{},
 			hp:             hp,
@@ -325,7 +382,7 @@ func (set *OsuRuleSet) Update(time int64) {
 			data = append(data, utils.Humanize(set.cursors[c].scoreProcessor.GetCombo()))
 			data = append(data, utils.Humanize(set.cursors[c].score.Combo))
 			data = append(data, set.cursors[c].player.diff.GetModString())
-			data = append(data, fmt.Sprintf("%.2f", set.cursors[c].ppv2.Results.Total))
+			data = append(data, fmt.Sprintf("%.2f", set.cursors[c].performance.Performance.PP))
 			table.Append(data)
 		}
 
@@ -430,7 +487,7 @@ func (set *OsuRuleSet) SendResult(time int64, cursor *graphics.Cursor, src HitOb
 
 	if result == Ignore || result == PositionalMiss {
 		if result == PositionalMiss && set.hitListener != nil && !subSet.player.diff.Mods.Active(difficulty.Relax) {
-			set.hitListener(cursor, time, number, vector.NewVec2f(x, y).Copy64(), result, comboResult, subSet.ppv2.Results, subSet.scoreProcessor.GetScore())
+			set.hitListener(cursor, time, number, vector.NewVec2f(x, y).Copy64(), result, comboResult, subSet.performance.Performance, subSet.scoreProcessor.GetScore())
 		}
 
 		return
@@ -503,10 +560,26 @@ func (set *OsuRuleSet) SendResult(time int64, cursor *graphics.Cursor, src HitOb
 	} else if ratio > 0.7 && subSet.score.CountMiss == 0 || ratio > 0.8 {
 		subSet.score.Grade = B
 	} else if ratio > 0.6 {
-		subSet.score.Grade = C
+		subSet.score.Grade = _C
 	} else {
 		subSet.score.Grade = D
 	}
+
+	params := ScoreParams{
+		Mode:          0,
+		Mods:          uint(subSet.player.diff.Mods),
+		MaxCombo:      subSet.score.Combo,
+		Accuracy:      subSet.score.Accuracy,
+		MissCount:     subSet.score.CountMiss,
+		PassedObjects: uint(subSet.numObjects),
+	}
+
+	if (subSet.player.diff.Mods & difficulty.Relax) > 0 {
+		params.PassedObjects = 0
+	}
+
+	subSet.performance.Performance = subSet.performance.Calculate(params)
+	log.Printf("%v PP | %v Stars", subSet.performance.Performance.PP, subSet.performance.Performance.Stars)
 
 	index := mutils.Max(1, subSet.numObjects) - 1
 
@@ -516,7 +589,7 @@ func (set *OsuRuleSet) SendResult(time int64, cursor *graphics.Cursor, src HitOb
 
 	subSet.ppv2.PPv2x(diff, int(subSet.score.Combo), int(subSet.score.Count300), int(subSet.score.Count100), int(subSet.score.Count50), int(subSet.score.CountMiss), subSet.player.diff)
 
-	subSet.score.PP = subSet.ppv2.Results
+	subSet.score.PP = subSet.performance.Performance.PP
 
 	switch result {
 	case Hit100:
@@ -569,11 +642,11 @@ func (set *OsuRuleSet) SendResult(time int64, cursor *graphics.Cursor, src HitOb
 	}
 
 	if set.hitListener != nil {
-		set.hitListener(cursor, time, number, vector.NewVec2f(x, y).Copy64(), result, comboResult, subSet.ppv2.Results, subSet.scoreProcessor.GetScore())
+		set.hitListener(cursor, time, number, vector.NewVec2f(x, y).Copy64(), result, comboResult, subSet.performance.Performance, subSet.scoreProcessor.GetScore())
 	}
 
 	if len(set.cursors) == 1 && !settings.RECORD {
-		log.Println(fmt.Sprintf(
+		log.Printf(
 			"Got: %3d, Combo: %4d, Max Combo: %4d, Score: %9d, Acc: %6.2f%%, 300: %4d, 100: %3d, 50: %2d, miss: %2d, from: %d, at: %d, pos: %.0fx%.0f, pp: %.2f",
 			result.ScoreValue(),
 			subSet.scoreProcessor.GetCombo(),
@@ -588,8 +661,8 @@ func (set *OsuRuleSet) SendResult(time int64, cursor *graphics.Cursor, src HitOb
 			time,
 			x,
 			y,
-			subSet.ppv2.Results.Total,
-		))
+			subSet.performance.Performance.PP,
+		)
 	}
 }
 

@@ -1,9 +1,15 @@
 package play
 
 import (
-	"fmt"
+	"log"
+	"math"
+	"path/filepath"
+	"sort"
+	"strings"
+
 	"github.com/thehowl/go-osuapi"
 	"github.com/wieku/danser-go/app/beatmap"
+	"github.com/wieku/danser-go/app/beatmap/difficulty"
 	"github.com/wieku/danser-go/app/settings"
 	"github.com/wieku/danser-go/app/skin"
 	"github.com/wieku/danser-go/framework/env"
@@ -13,11 +19,6 @@ import (
 	"github.com/wieku/danser-go/framework/math/animation/easing"
 	"github.com/wieku/danser-go/framework/math/mutils"
 	"github.com/wieku/danser-go/framework/math/vector"
-	"log"
-	"math"
-	"path/filepath"
-	"sort"
-	"strings"
 )
 
 const spacing = 57.6
@@ -58,7 +59,7 @@ func NewScoreboard(beatMap *beatmap.BeatMap, omitID int64) *ScoreBoard {
 
 	key := strings.TrimSpace(settings.Credentails.ApiV1Key)
 	if key == "" {
-		log.Println(fmt.Sprintf("Please put your osu!api v1 key into '%s' file", filepath.Join(env.ConfigDir(), "credentials.json")))
+		log.Printf("Please put your osu!api v1 key into '%s' file", filepath.Join(env.ConfigDir(), "credentials.json"))
 	} else {
 		client := osuapi.NewClient(key)
 		err := client.Test()
@@ -80,6 +81,12 @@ func NewScoreboard(beatMap *beatmap.BeatMap, omitID int64) *ScoreBoard {
 					opts.Mods = &mods1
 				}
 
+				if beatMap.Diff.Mods&difficulty.Relax > 0 {
+					opts.Relax = 1
+				} else if beatMap.Diff.Mods&difficulty.Relax2 > 0 {
+					opts.Relax = 2
+				}
+
 				scores, err := client.GetScores(opts)
 				if len(scores) == 0 || err != nil {
 					log.Println("Can't find online scores!")
@@ -98,10 +105,21 @@ func NewScoreboard(beatMap *beatmap.BeatMap, omitID int64) *ScoreBoard {
 						return scores[i].Score.Score > scores[j].Score.Score
 					})
 
+					if opts.Relax > 0 {
+						sort.SliceStable(scores, func(i, j int) bool {
+							return scores[i].Score.PP > scores[j].Score.PP
+						})
+					}
+
 					for i := 0; i < mutils.Min(len(scores), 50); i++ {
 						s := scores[i]
 
-						entry := NewScoreboardEntry(s.Username, s.Score.Score, int64(s.MaxCombo), i+1, false)
+						var entry *ScoreboardEntry
+						if opts.Relax == 0 {
+							entry = NewScoreboardEntry(s.Username, s.Score.Score, int64(s.MaxCombo), i+1, false)
+						} else {
+							entry = NewScoreboardEntry(s.Username, int64(s.Score.PP), int64(s.MaxCombo), i+1, false)
+						}
 
 						if settings.Gameplay.ScoreBoard.ShowAvatars {
 							entry.LoadAvatarID(s.UserID)

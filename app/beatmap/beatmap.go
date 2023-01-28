@@ -1,14 +1,15 @@
 package beatmap
 
 import (
-	"github.com/wieku/danser-go/app/audio"
-	"github.com/wieku/danser-go/app/beatmap/difficulty"
-	"github.com/wieku/danser-go/app/beatmap/objects"
-	"golang.org/x/exp/slices"
 	"math"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/wieku/danser-go/app/audio"
+	"github.com/wieku/danser-go/app/beatmap/difficulty"
+	"github.com/wieku/danser-go/app/beatmap/objects"
+	"golang.org/x/exp/slices"
 )
 
 type BeatMap struct {
