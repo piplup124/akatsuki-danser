@@ -574,10 +574,6 @@ func (set *OsuRuleSet) SendResult(time int64, cursor *graphics.Cursor, src HitOb
 		PassedObjects: uint(subSet.numObjects),
 	}
 
-	if (subSet.player.diff.Mods & difficulty.Relax) > 0 {
-		params.PassedObjects = 0
-	}
-
 	subSet.performance.Performance = subSet.performance.Calculate(params)
 	log.Printf("%v PP | %v Stars", subSet.performance.Performance.PP, subSet.performance.Performance.Stars)
 

@@ -4,6 +4,7 @@
 /videos/
 /settings/
 /ffmpeg/
+/release/
 settings.json
 settings-*
 *.db

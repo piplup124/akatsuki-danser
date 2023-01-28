@@ -34,12 +34,12 @@ preRC='#include "winuser.h"
             BEGIN
               BLOCK "040904b0"
               BEGIN
-                VALUE "CompanyName", "Wieku"
-                VALUE "FileDescription", "danser'
+                VALUE "CompanyName", "blobnom"
+                VALUE "FileDescription", "danser-rosu'
 
 postRC='"
-      VALUE "LegalCopyright", "Wieku 2018-2022"
-      VALUE "ProductName", "danser"
+      VALUE "LegalCopyright", "blobnom 2023"
+      VALUE "ProductName", "danser-rosu"
       VALUE "ProductVersion", "'$build'"
     END
     END
@@ -65,13 +65,13 @@ go run tools/assets/assets.go ./ $BUILD_DIR/
 
 cp $BUILD_DIR/danser.syso danser.syso
 
-go build -trimpath -ldflags "-s -w -X 'github.com/wieku/danser-go/build.VERSION=$build' -X 'github.com/wieku/danser-go/build.Stream=Release'" -buildmode=c-shared -o $BUILD_DIR/danser-core.dll -v -x
+go build -trimpath -ldflags "-s -w -X 'github.com/blobnom/danser-go-rosu/build.VERSION=$build' -X 'github.com/blobnom/danser-go-rosu/build.Stream=Release'" -buildmode=c-shared -o $BUILD_DIR/danser-core.dll -v -x
 
 rm -f danser.syso
 
 $resgen <<< $resDanser
 
-cp {bass.dll,bass_fx.dll,bassmix.dll,libyuv.dll} $BUILD_DIR/
+cp {bass.dll,bass_fx.dll,bassmix.dll,libyuv.dll,akatsuki_pp_ffi.dll} $BUILD_DIR/
 
 $CC <<< --verbose -O3 -o $BUILD_DIR/danser-cli.exe -I. cmain/main_danser.c -I$BUILD_DIR/ -L$BUILD_DIR/ -ldanser-core $BUILD_DIR/danser.syso -municode
 
