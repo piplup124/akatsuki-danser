@@ -1,14 +1,18 @@
 package play
 
 import (
+	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 
 	osuapi "github.com/blobnom/go-rosuapi"
+	"github.com/disintegration/imaging"
 	"github.com/wieku/danser-go/app/settings"
 	"github.com/wieku/danser-go/app/skin"
 	"github.com/wieku/danser-go/app/utils"
@@ -175,7 +179,8 @@ func (entry *ScoreboardEntry) loadAvatar(pixmap *texture.Pixmap) {
 	region := tex.GetRegion()
 
 	entry.avatar = sprite.NewSpriteSingle(&region, 0, vector.NewVec2d(26, 0), vector.Centre)
-	entry.avatar.SetScale(float64(52 / region.Height))
+
+	entry.avatar.SetScaleV(vector.NewVec2d(float64(52/region.Height), float64(52/region.Height)))
 }
 
 func (entry *ScoreboardEntry) LoadAvatarID(id int) {
@@ -198,10 +203,30 @@ func (entry *ScoreboardEntry) LoadAvatarID(id int) {
 		return
 	}
 
+	avatarFolder := filepath.Join(env.DataDir(), "avatars")
+	if _, err := os.Stat(avatarFolder); errors.Is(err, os.ErrNotExist) {
+		err := os.Mkdir(avatarFolder, os.ModePerm)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+
+	imagePath := filepath.Join(avatarFolder, strconv.Itoa(id)+".png")
+	imageData, _ := ioutil.ReadAll(response.Body)
+	err = ioutil.WriteFile(imagePath, imageData, 0644)
+	if err != nil {
+		log.Println("Can't save avatar! Error:", err)
+		return
+	}
+
+	imgTmp, _ := imaging.Open(imagePath)
+	newImg := imaging.Resize(imgTmp, 52, 52, imaging.Lanczos)
+	imaging.Save(newImg, imagePath)
+
 	defer response.Body.Close()
 
 	if response.StatusCode != 200 {
-		log.Println("a.ppy.sh responded with:", response.StatusCode)
+		log.Println("a.ussr.pl responded with:", response.StatusCode)
 
 		if response.StatusCode == 404 {
 			log.Println("Avatar for user", id, "not found!")
@@ -210,7 +235,9 @@ func (entry *ScoreboardEntry) LoadAvatarID(id int) {
 		return
 	}
 
-	pixmap, err := texture.NewPixmapReader(response.Body, response.ContentLength)
+	tmpFile, _ := os.Open(imagePath)
+	fileStat, _ := tmpFile.Stat()
+	pixmap, err := texture.NewPixmapReader(tmpFile, fileStat.Size())
 	if err != nil {
 		log.Println("Can't load avatar! Error:", err)
 		return
@@ -218,6 +245,7 @@ func (entry *ScoreboardEntry) LoadAvatarID(id int) {
 
 	entry.loadAvatar(pixmap)
 
+	os.Remove(imagePath)
 	pixmap.Dispose()
 }
 
@@ -235,6 +263,8 @@ func (entry *ScoreboardEntry) LoadDefaultAvatar() {
 
 func (entry *ScoreboardEntry) LoadAvatarUser(user string) {
 	key := strings.TrimSpace(settings.Credentails.ApiV1Key)
+	user = strings.TrimRight(user, "􏿿")
+
 	if key == "" {
 		log.Printf("Please put your osu!api v1 key into '%s' file", filepath.Join(env.ConfigDir(), "credentials.json"))
 	} else {

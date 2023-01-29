@@ -2,6 +2,13 @@ package skin
 
 import (
 	"fmt"
+	"log"
+	"path/filepath"
+	"sort"
+	"strconv"
+	"strings"
+	"sync"
+
 	"github.com/faiface/mainthread"
 	"github.com/wieku/danser-go/app/settings"
 	"github.com/wieku/danser-go/framework/assets"
@@ -10,12 +17,6 @@ import (
 	"github.com/wieku/danser-go/framework/graphics/font"
 	"github.com/wieku/danser-go/framework/graphics/texture"
 	"github.com/wieku/danser-go/framework/math/color"
-	"log"
-	"path/filepath"
-	"sort"
-	"strconv"
-	"strings"
-	"sync"
 )
 
 type Source int

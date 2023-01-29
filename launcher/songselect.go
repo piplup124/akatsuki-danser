@@ -2,6 +2,13 @@ package launcher
 
 import (
 	"fmt"
+	"math"
+	"math/rand"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"unicode"
+
 	"github.com/inkyblackness/imgui-go/v4"
 	"github.com/wieku/danser-go/app/beatmap"
 	"github.com/wieku/danser-go/app/settings"
@@ -13,12 +20,6 @@ import (
 	"github.com/wieku/danser-go/framework/qpc"
 	"github.com/wieku/danser-go/framework/util"
 	"golang.org/x/exp/slices"
-	"math"
-	"math/rand"
-	"path/filepath"
-	"strconv"
-	"strings"
-	"unicode"
 )
 
 type SortBy int

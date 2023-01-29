@@ -36,13 +36,14 @@ require (
 )
 
 require (
-	github.com/blobnom/go-rosuapi v0.0.0-20230128194943-6b21ec69fd28
+	github.com/blobnom/go-rosuapi v0.0.0-20230129001846-4f0a7a5eb68b
 	github.com/sqweek/dialog v0.0.0-20220504154117-be45b268883a
 	golang.org/x/exp v0.0.0-20220312040426-20fd27f61765
 )
 
 require (
 	github.com/TheTitanrain/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
+	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/rodrigocfd/windigo v0.0.0-20221212040622-0d5f23c1b18a // indirect
 )
 

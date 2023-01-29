@@ -2,6 +2,12 @@ package storyboard
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+
 	"github.com/wieku/danser-go/app/beatmap"
 	"github.com/wieku/danser-go/app/settings"
 	"github.com/wieku/danser-go/app/skin"
@@ -17,11 +23,6 @@ import (
 	"github.com/wieku/danser-go/framework/math/animation/easing"
 	"github.com/wieku/danser-go/framework/math/vector"
 	"github.com/wieku/danser-go/framework/qpc"
-	"log"
-	"os"
-	"path/filepath"
-	"strconv"
-	"strings"
 )
 
 type Storyboard struct {

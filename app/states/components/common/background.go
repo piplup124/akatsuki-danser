@@ -1,6 +1,10 @@
 package common
 
 import (
+	"log"
+	"math"
+	"path/filepath"
+
 	"github.com/EdlinOrg/prominentcolor"
 	"github.com/faiface/mainthread"
 	"github.com/go-gl/mathgl/mgl32"
@@ -20,9 +24,6 @@ import (
 	"github.com/wieku/danser-go/framework/math/mutils"
 	"github.com/wieku/danser-go/framework/math/scaling"
 	"github.com/wieku/danser-go/framework/math/vector"
-	"log"
-	"math"
-	"path/filepath"
 )
 
 type Background struct {

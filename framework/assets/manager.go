@@ -2,14 +2,15 @@ package assets
 
 import (
 	"archive/zip"
-	"github.com/wieku/danser-go/framework/env"
-	"github.com/wieku/danser-go/framework/graphics/texture"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/wieku/danser-go/framework/env"
+	"github.com/wieku/danser-go/framework/graphics/texture"
 )
 
 var zipHeader = []byte{0x50, 0x4b, 0x03, 0x04}
