@@ -1,8 +1,8 @@
-<p align="center">
-  <img width="500px" src="assets/textures/coinbig.png"/>
-</p>
-
 # danser-go
+
+<p align="center">
+  <img width="500px" src="assets/textures/coinbig-santa.png"/>
+</p>
 
 # Installation:
 
@@ -14,9 +14,22 @@ Extract the mingw64 folder to a location like C:\ where it's easy to find.
 
 Copy the path to the bin folder located inside mingw64 and add it to the Path system environment variable.
 
+- Search on your Windows start bar "Edit System Environment Variables"
+
+- Head to "Environment Variables"
+
+- Click the Path variable on top
+- ![image](https://github.com/user-attachments/assets/3645d8e6-cef6-4a90-9c88-a0aeaa19ec96)
+
+- Click on it then go to Edit...
+
+- Press "New" and add the path to the bin folder
+
 Run danser-go.exe
 
 To make leaderboards work you need to put rosu into the API V1 Key field in your settings, Or you can ask akatsuki developers for your own API Key to use the Akatsuki Leaderboards.
+
+
 
 ## Credits and License
 
