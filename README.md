@@ -29,7 +29,13 @@ Run danser-go.exe
 
 To make leaderboards work you need to put rosu into the API V1 Key field in your settings, Or you can ask akatsuki developers for your own API Key to use the Akatsuki Leaderboards.
 
+## Usage Examples
 
+https://youtu.be/zbCEgH9AfWI?si=PYERYmrO80Cwf6do
+
+https://youtu.be/jsPOyPGV65M?si=qXeWqdBbXGkWGErx
+
+https://youtu.be/sCuxwc88Cvo?si=btMy9ijTqFkbZuSG
 
 ## Credits and License
 
